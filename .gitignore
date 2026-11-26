@@ -1,0 +1,13 @@
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/
+cache/
+build/
+dist/
+prototype/sorties/
+prototype/meteo/
+verification/sorties/
+prototype/ifc_exemples/
+prototype/voisins/
+verification/meteo/

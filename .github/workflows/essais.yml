@@ -1,0 +1,23 @@
+# Style et essais, sans EnergyPlus : les essais qui en dépendent sont sautés d'eux-mêmes.
+# JAMAIS LANCÉ : écrit avant que le dépôt ait un hébergement. À vérifier au premier passage.
+name: essais
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  essais:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -e ".[essais,energyplus,maquette]"
+      - run: python outils/controle_avant_commit.py --tout
+      - run: python -m ruff check .
+      - run: python -m pytest

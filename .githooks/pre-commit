@@ -1,0 +1,6 @@
+#!/bin/sh
+# Contrôle de ce qui entre dans le dépôt. Mise en place : git config core.hooksPath .githooks
+if [ -x .venv/Scripts/python.exe ]; then exec .venv/Scripts/python.exe outils/controle_avant_commit.py
+elif [ -x .venv/bin/python ]; then exec .venv/bin/python outils/controle_avant_commit.py
+else exec python outils/controle_avant_commit.py
+fi

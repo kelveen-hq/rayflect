@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rayflect"
+version = "0.0.1"
+description = "Comparer des choix de conception sobres sur un bâtiment, heure par heure"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Paul Trément" }]
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+# [S] Les planchers sont les versions avec lesquelles les essais ont été joués ; les versions exactes sont dans
+# verrouillage.txt. Une version plus ancienne peut marcher : elle n'a pas été contrôlée.
+dependencies = ["numpy>=2.5", "pandas>=3.1", "pvlib>=0.16", "requests>=2.34"]
+
+[project.optional-dependencies]
+essais = ["pytest>=9.2", "ruff>=0.17"]
+energyplus = ["honeybee-energy>=1.128.6"]        # AGPL-3.0 ; demande EnergyPlus installé sur le poste
+maquette = ["ifcopenshell>=0.9", "shapely>=2.2", "ezdxf>=1.4"]  # LGPL-3.0, BSD et MIT
+
+[project.scripts]
+rayflect = "rayflect.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+rayflect = ["resultats.schema.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-m 'not lent'"
+markers = ["lent: lance EnergyPlus des dizaines de fois, à jouer par pytest -m lent"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py311"
+extend-exclude = ["prototype/sorties", "prototype/ifc_exemples", "verification/sorties"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]

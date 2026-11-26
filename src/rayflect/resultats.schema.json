@@ -1,0 +1,185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rayflect-resultats-v1",
+  "title": "Les résultats d'une étude Rayflect (resultats.json), version 1",
+  "description": "Ce que la commande « rayflect etude » écrit dans resultats.json. Les grandeurs par scénario sont des objets dont les clés sont les noms des scénarios, dans l'ordre de la clé « scenarios ». Les grandeurs par pièce ont pour clé « rang | niveau | côté » ; la clé « pieces » donne les mêmes pièces en clair. Une valeur inconnue est null, jamais 0. Unités dans le nom de la clé : _kwh par an, _kw, _c en °C, _m2, _s.",
+  "x-version": 1,
+  "x-empreinte": "ae5faebb53e2e3af",
+  "type": "object",
+  "required": ["format", "maquette", "lieu", "lieu_fiche", "meteo", "meteo_a_savoir", "hypotheses", "heures_d_occupation",
+               "scenarios", "pieces", "repris", "voisins", "bso_manuels", "a_demander", "heures_au_dessus_de_26",
+               "autonomie_300_lux", "chauffage_kwh", "froid_kwh", "froid_avec_vapeur_kwh", "energie",
+               "energie_comment", "production_pv_kwh", "duree_s", "changements", "puissance", "puissance_comment",
+               "moteur"],
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "type": "object", "required": ["nom", "version", "empreinte"], "additionalProperties": false,
+      "properties": {"nom": {"const": "rayflect-resultats"}, "version": {"const": 1},
+                     "empreinte": {"type": "string", "description": "L'empreinte du schéma que le fichier suit."}}
+    },
+    "maquette": {"type": "string", "description": "Le nom du fichier du bâtiment, ou « bâtiment décrit par ses chiffres »."},
+    "lieu": {"type": "string"},
+    "lieu_fiche": {"$ref": "#/$defs/textes"},
+    "meteo": {"type": "string", "description": "Le nom du fichier météo."},
+    "meteo_a_savoir": {"$ref": "#/$defs/textes"},
+    "climat": {"type": "string", "description": "Le climat joué : type (l'année type), une année réelle (2022), ete_le_plus_chaud ou futur (2040-2049) ; voir rayflect.io.climats."},
+    "hypotheses": {"$ref": "#/$defs/textes", "description": "Chaque hypothèse avec son origine : [S] sourcée, [D] déduite, [H] supposée, [C] citée."},
+    "heures_d_occupation": {"type": "integer", "minimum": 0},
+    "scenarios": {"$ref": "#/$defs/textes", "description": "Les scénarios, la référence d'abord."},
+    "pieces": {
+      "type": "array", "description": "Les pièces des tableaux par pièce, dans leur ordre.",
+      "items": {"type": "object", "required": ["cle", "rang", "niveau", "cote"], "additionalProperties": false,
+                "properties": {"cle": {"type": "string"}, "rang": {"type": "integer", "minimum": 0},
+                               "niveau": {"type": "string"}, "cote": {"type": "string"}}}
+    },
+    "repris": {
+      "type": "object", "description": "Ce qui a été repris du bâtiment relevé.",
+      "required": ["zones", "baies", "aire_reposee_m2", "aire_relevee_m2", "baies_ecartees", "niveaux_ecartes",
+                   "niveaux_non_chauffes", "murs_mitoyens", "aire_mitoyenne_m2"],
+      "additionalProperties": false,
+      "properties": {"zones": {"type": "integer"}, "baies": {"type": "integer"}, "aire_reposee_m2": {"type": "number"},
+                     "aire_relevee_m2": {"type": "number"}, "baies_ecartees": {"type": "integer"},
+                     "niveaux_ecartes": {"$ref": "#/$defs/textes"}, "niveaux_non_chauffes": {"$ref": "#/$defs/textes"},
+                     "murs_mitoyens": {"type": "integer"}, "aire_mitoyenne_m2": {"type": "number"}}
+    },
+    "voisins": {"type": ["object", "null"], "description": "Les bâtiments voisins repris de la carte, ou null sans voisins demandés."},
+    "bso_manuels": {"type": ["object", "null"], "description": "Ce que les occupants font des stores manuels, ou null."},
+    "a_demander": {"$ref": "#/$defs/textes", "description": "Ce qui manque ou reste à confirmer : à montrer avant les chiffres."},
+    "heures_au_dessus_de_26": {"$ref": "#/$defs/par_piece", "description": "Heures d'occupation au-dessus de 26 °C ressentis, par an."},
+    "autonomie_300_lux": {"$ref": "#/$defs/par_piece", "description": "Part des heures d'occupation avec au moins 300 lux de lumière du jour, de 0 à 1."},
+    "chauffage_kwh": {"$ref": "#/$defs/par_scenario_nombre"},
+    "froid_kwh": {"$ref": "#/$defs/par_scenario_nombre", "description": "Froid sensible ; vide sans climatisation."},
+    "froid_avec_vapeur_kwh": {"$ref": "#/$defs/par_scenario_nombre", "description": "Froid avec la vapeur condensée ; vide sans climatisation."},
+    "energie": {
+      "type": "object", "description": "Énergie achetée, CO2 et dépense par scénario ; vide sans table [energie].",
+      "additionalProperties": {
+        "type": "object", "required": ["chauffage_kwh", "energie_de_chauffage", "climatisation_kwh", "kgco2", "euros"],
+        "additionalProperties": false,
+        "properties": {"chauffage_kwh": {"type": "number"}, "energie_de_chauffage": {"type": "string"},
+                       "climatisation_kwh": {"type": "number"}, "kgco2": {"type": ["number", "null"]},
+                       "euros": {"type": ["number", "null"]}}
+      }
+    },
+    "energie_comment": {"$ref": "#/$defs/textes"},
+    "production_pv_kwh": {"$ref": "#/$defs/par_scenario_nombre", "description": "Vide sans photovoltaïque."},
+    "duree_s": {"$ref": "#/$defs/par_scenario_nombre", "description": "Durée du calcul de chaque scénario."},
+    "changements": {"type": "object", "description": "Ce que chaque scénario change, en clair.",
+                    "additionalProperties": {"$ref": "#/$defs/textes"}},
+    "puissance": {
+      "type": "object", "description": "Puissances à installer, par scénario.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["chauffage_au_jour_de_base_kw", "chauffage_au_jour_de_base_w_m2", "temperature_de_base_c",
+                     "pointe_de_chauffage", "pointe_de_froid"],
+        "additionalProperties": false,
+        "properties": {"chauffage_au_jour_de_base_kw": {"type": ["number", "null"]},
+                       "chauffage_au_jour_de_base_w_m2": {"type": ["number", "null"]},
+                       "temperature_de_base_c": {"type": ["number", "null"]},
+                       "pointe_de_chauffage": {"$ref": "#/$defs/pointe"}, "pointe_de_froid": {"$ref": "#/$defs/pointe"}}
+      }
+    },
+    "puissance_comment": {"$ref": "#/$defs/textes"},
+    "lumiere": {
+      "type": "object",
+      "description": "La lumière du jour par pièce puis par scénario (rayflect.lumiere), en parts des heures d'occupation, de 0 à 1 : l'autonomie à 300 et 100 lux au centre, l'éclairement médian au centre en lux, au bord de baie (1 m de la vitre la plus grande) l'autonomie à 300 lux et l'excès au-dessus de 2 000 et 3 000 lux, l'excès au centre, et l'éblouissement (indice DGI au-dessus de 22) au centre et au bord. null quand la pièce n'a pas de point au bord.",
+      "additionalProperties": {"type": "object", "additionalProperties": {
+        "type": "object",
+        "required": ["autonomie_300_lux", "autonomie_100_lux", "eclairement_median_lux", "centre_plus_de_3000_lux",
+                     "bord_autonomie_300_lux", "bord_plus_de_2000_lux", "bord_plus_de_3000_lux", "eblouissement_centre",
+                     "eblouissement_bord"],
+        "additionalProperties": false,
+        "properties": {"autonomie_300_lux": {"type": "number", "minimum": 0}, "autonomie_100_lux": {"type": "number", "minimum": 0},
+                       "eclairement_median_lux": {"type": "integer", "minimum": 0},
+                       "centre_plus_de_3000_lux": {"type": ["number", "null"], "minimum": 0},
+                       "bord_autonomie_300_lux": {"type": ["number", "null"], "minimum": 0},
+                       "bord_plus_de_2000_lux": {"type": ["number", "null"], "minimum": 0},
+                       "bord_plus_de_3000_lux": {"type": ["number", "null"], "minimum": 0},
+                       "eblouissement_centre": {"type": ["number", "null"], "minimum": 0},
+                       "eblouissement_bord": {"type": ["number", "null"], "minimum": 0}}}}
+    },
+    "trajectoires": {
+      "type": "object",
+      "description": "Chaque plantation jouée à plusieurs âges (rayflect.trajectoire), ses points du plus jeune au plus vieux : âge, scénario, taille des plantes, ombre végétale mois par mois (la part du soleil des baies arrêtée face à la référence, de 0 à 1, de janvier à décembre), degrés-heures et heures au-dessus de 26 °C de la pièce la plus chaude, chauffage, lumière du jour de la pièce la moins éclairée.",
+      "additionalProperties": {"type": "array", "items": {
+        "type": "object",
+        "required": ["age_ans", "scenario", "plantes", "ombre_par_mois", "dh", "heures_au_dessus_de_26", "chauffage_kwh",
+                     "autonomie_300_lux"],
+        "additionalProperties": false,
+        "properties": {
+          "age_ans": {"type": "number", "minimum": 0}, "scenario": {"type": "string"},
+          "plantes": {"type": "array", "items": {"type": "object", "required": ["type", "essence", "hauteur_m", "couronne_m"],
+                      "additionalProperties": false,
+                      "properties": {"type": {"type": "string"}, "essence": {"type": ["string", "null"]},
+                                     "hauteur_m": {"type": ["number", "null"]}, "couronne_m": {"type": ["number", "null"]}}}},
+          "ombre_par_mois": {"type": "array", "items": {"type": ["number", "null"]}, "minItems": 12, "maxItems": 12},
+          "dh": {"type": ["number", "null"]}, "heures_au_dessus_de_26": {"type": ["number", "null"]},
+          "chauffage_kwh": {"type": ["number", "null"]}, "autonomie_300_lux": {"type": ["number", "null"]}}}}
+    },
+    "confort_d_ete": {
+      "type": "object",
+      "description": "Les degrés-heures d'inconfort à la façon de la RE2020 (rayflect.confort), en ordre de grandeur sur la météo de l'étude. pieces : par pièce puis par scénario ; vide pour une étude climatisée. dh en °C.h ; heures, heures_plus_1, heures_plus_2 : heures d'occupation au seuil d'inconfort, au seuil + 1 °C, au seuil + 2 °C ; dh_nuit : la part de 22 h à 6 h en logement, null pour un autre usage. periode : jours de l'année (1 à 365) de la période de confort adaptatif, null si l'été n'y arrive pas.",
+      "required": ["pieces", "periode", "comment"], "additionalProperties": false,
+      "properties": {
+        "pieces": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
+          "type": "object", "required": ["dh", "heures", "heures_plus_1", "heures_plus_2", "dh_nuit"],
+          "additionalProperties": false,
+          "properties": {"dh": {"type": "integer", "minimum": 0}, "heures": {"type": "integer", "minimum": 0},
+                         "heures_plus_1": {"type": "integer", "minimum": 0}, "heures_plus_2": {"type": "integer", "minimum": 0},
+                         "dh_nuit": {"type": ["integer", "null"], "minimum": 0}}}}},
+        "periode": {"type": ["object", "null"], "required": ["premier_jour", "dernier_jour"], "additionalProperties": false,
+                    "properties": {"premier_jour": {"type": "integer", "minimum": 1}, "dernier_jour": {"type": "integer", "minimum": 1}}},
+        "comment": {"$ref": "#/$defs/textes"}
+      }
+    },
+    "carbone": {
+      "type": "object",
+      "description": "Le carbone des matériaux ajoutés par chaque scénario (fabrication, modules A1 à A3), rayflect.carbone. Par scénario : ses lignes (élément, matériau, quantité mesurée, masse en kg ou null, kg CO2e, sources), son total en kg CO2e, ce qui n'est pas chiffré, le CO2 évité par an et le retour.",
+      "additionalProperties": {
+        "type": "object", "required": ["lignes", "kgco2e", "non_chiffres", "co2_evite_kg_par_an", "retour_ans"],
+        "additionalProperties": false,
+        "properties": {
+          "lignes": {"type": "array", "items": {
+            "type": "object", "required": ["element", "materiau", "quantite", "masse_kg", "kgco2e", "sources"],
+            "additionalProperties": false,
+            "properties": {"element": {"type": "string"}, "materiau": {"type": "string"}, "quantite": {"type": "string"},
+                           "masse_kg": {"type": ["integer", "null"], "minimum": 0}, "kgco2e": {"type": "integer"},
+                           "sources": {"$ref": "#/$defs/textes"}}}},
+          "kgco2e": {"type": "integer"}, "non_chiffres": {"$ref": "#/$defs/textes"},
+          "co2_evite_kg_par_an": {"type": ["integer", "null"], "description": "Le CO2 d'exploitation évité chaque année face au premier scénario, photovoltaïque compris ; null sans table [energie]."},
+          "retour_ans": {"type": ["number", "null"], "description": "Les années pour que le CO2 évité rembourse le carbone construit ; null sans économie."}
+        }
+      }
+    },
+    "bilan_de_chaleur": {
+      "type": "object",
+      "description": "D'où vient la chaleur des pièces chauffées et où elle part, par scénario (rayflect.bilan). Chaque poste en kWh : positif quand il apporte de la chaleur, négatif quand il en prend ; le chauffage apporte, le froid prend. par_mois : de janvier à décembre. cote : le côté de la façade (N, NE, E, SE, S, SO, O, NO), null pour un poste sans façade. ecart_kwh : ce qui manque pour que le bilan se referme ; ecart_part : sa part des échanges.",
+      "additionalProperties": {
+        "type": "object", "required": ["postes", "ecart_kwh", "ecart_part"], "additionalProperties": false,
+        "properties": {
+          "postes": {"type": "array", "items": {
+            "type": "object", "required": ["poste", "cote", "kwh", "par_mois"], "additionalProperties": false,
+            "properties": {"poste": {"type": "string"}, "cote": {"type": ["string", "null"]}, "kwh": {"type": "integer"},
+                           "par_mois": {"type": "array", "items": {"type": "integer"}, "minItems": 12, "maxItems": 12}}}},
+          "ecart_kwh": {"type": "integer"}, "ecart_part": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "moteur": {
+      "type": "object", "description": "Ce qui a produit le résultat.",
+      "required": ["versions", "reglages", "avertissements", "calculs_en_meme_temps"], "additionalProperties": false,
+      "properties": {"versions": {"type": "object", "additionalProperties": {"type": "string"}},
+                     "reglages": {"type": "object"}, "avertissements": {"$ref": "#/$defs/par_scenario_nombre"},
+                     "calculs_en_meme_temps": {"type": "integer", "minimum": 1}}
+    },
+    "extensions": {"type": "object", "description": "Ce que les éléments d'un autre paquet ont lu, par scénario puis par type ; leur forme est la leur.",
+                   "additionalProperties": {"type": "object"}}
+  },
+  "$defs": {
+    "textes": {"type": "array", "items": {"type": "string"}},
+    "par_scenario_nombre": {"type": "object", "additionalProperties": {"type": ["number", "null"]}},
+    "par_piece": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {"type": ["number", "null"]}}},
+    "pointe": {"type": ["object", "null"], "required": ["kw", "quand", "dehors_c"], "additionalProperties": false,
+               "properties": {"kw": {"type": "number"}, "quand": {"type": "string"}, "dehors_c": {"type": "number"}}}
+  }
+}
