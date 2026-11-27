@@ -1,0 +1,26 @@
+name: "Une proposition · A proposal"
+description: "Une technique à comparer, une donnée, un cas de vérification · A technique to compare, a data source, a verification case"
+labels: ["proposition"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pour une idée encore floue, commencez plutôt par les Discussions.
+        For an idea still taking shape, start in the Discussions instead.
+  - type: textarea
+    id: besoin
+    attributes:
+      label: "Le besoin · The need"
+      description: "Quel choix de conception voulez-vous pouvoir comparer, et sur quel projet ? · Which design choice do you want to compare, on which kind of project?"
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: "Les sources · The sources"
+      description: "Norme, article, mesures, logiciel de référence qui permettraient de le vérifier · Standard, paper, measurements, reference software that would allow checking it"
+  - type: textarea
+    id: aide
+    attributes:
+      label: "Ce que vous pouvez apporter · What you can bring"
+      description: "Un cas réel, des mesures, du code, une relecture · A real case, measurements, code, a review"

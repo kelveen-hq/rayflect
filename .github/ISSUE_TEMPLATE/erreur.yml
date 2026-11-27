@@ -1,0 +1,37 @@
+name: "Une erreur · A bug"
+description: "Un résultat faux, un plantage, un message qui trompe · A wrong result, a crash, a misleading message"
+labels: ["erreur"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de le signaler. Une erreur qu'on peut rejouer se corrige vite.
+        Thank you for reporting it. A bug that can be replayed gets fixed fast.
+        **Ne joignez aucune donnée que vous n'avez pas le droit de partager** (maquette d'un client, fichier météo payant).
+        **Do not attach any data you may not share** (a client's model, a paid weather file).
+  - type: textarea
+    id: quoi
+    attributes:
+      label: "Ce qui se passe · What happens"
+      description: "Le message, le chiffre qui vous semble faux, et pourquoi · The message, the figure that looks wrong, and why"
+    validations:
+      required: true
+  - type: textarea
+    id: attendu
+    attributes:
+      label: "Ce que vous attendiez · What you expected"
+      description: "Une valeur de référence, une source, un calcul à la main · A reference value, a source, a hand calculation"
+  - type: textarea
+    id: rejouer
+    attributes:
+      label: "Pour le rejouer · To replay it"
+      description: "La commande lancée et le fichier d'étude TOML (ou son extrait) · The command run and the TOML study file (or an excerpt)"
+      render: toml
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: "Versions"
+      description: "Rayflect (commit), EnergyPlus, Python, système · Rayflect (commit), EnergyPlus, Python, OS"
+      placeholder: "5b64d3c, EnergyPlus 25.2, Python 3.12, Windows 11"

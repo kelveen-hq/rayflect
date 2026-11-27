@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "Une question, une étude à partager · A question, a study to share"
+    url: https://github.com/kelveen-hq/rayflect/discussions
+    about: "Les Discussions, pour échanger avec les autres utilisateurs · The Discussions, to talk with other users"
+  - name: "Kelveen"
+    url: https://kelveen.com/outils.html#libre
+    about: "Qui porte Rayflect · Who is behind Rayflect"

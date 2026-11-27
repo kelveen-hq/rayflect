@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "Pour citer Rayflect, merci d'utiliser ces informations. If you use Rayflect, please cite it as below."
+title: "Rayflect"
+abstract: "Rayflect compares low-tech building design choices hour by hour (solar shading, vegetation, openable windows, night ventilation, walls, Trombe walls, geothermal boreholes) and hands the calculation to EnergyPlus through Honeybee and Ladybug. Every figure carries its proof."
+type: software
+authors:
+  - family-names: "Trément"
+    given-names: "Paul"
+  - name: "Kelveen"
+    city: "Bordeaux"
+    country: "FR"
+    website: "https://kelveen.com"
+repository-code: "https://github.com/kelveen-hq/rayflect"
+url: "https://kelveen.com/outils.html#libre"
+license: AGPL-3.0-or-later
+keywords:
+  - building simulation
+  - building energy
+  - EnergyPlus
+  - solar shading
+  - bioclimatic design
+  - architecture
+  - overheating
+  - Honeybee

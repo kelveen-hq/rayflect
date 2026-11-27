@@ -1,5 +1,7 @@
 # Rayflect
 
+*[English version](README.en.md)*
+
 ## En bref
 
 **Ce qu'il fait.** Rayflect compare des choix de conception sobres sur un bâtiment, heure par heure : protections
@@ -40,7 +42,7 @@ sur les autres critères.
 degrés-heures d'inconfort, par exemple), sur la météo et les hypothèses de l'étude. Il sert à comparer des choix en
 esquisse et en avant-projet. Il ne remplace jamais le calcul réglementaire, qui seul fait foi pour une attestation.
 
-**État : en construction, non publié.** Tout se lance en ligne de commande ; il n'y a pas encore d'interface.
+**État : public, en construction.** Tout se lance en ligne de commande ; il n'y a pas encore d'interface.
 
 Pour l'installer et jouer une première étude en 20 minutes : [docs/INSTALLATION.md](docs/INSTALLATION.md).
 
@@ -149,10 +151,10 @@ Une étude tient dans un fichier TOML, qu'on peut rejouer et partager. Son forma
 | `sondes` | Un champ de sondes géothermiques : la température de l'eau qui revient du sol, suivie sur plusieurs années |
 | `moteur` | EnergyPlus : sa version, ses réglages, et son journal d'erreurs, qui arrête une étude fautive |
 | `geometrie` | La découpe d'un masque en morceaux convexes, les seuls qu'EnergyPlus ombre juste |
+| `services`, `config`, `io/pvgis_historical` | Physique solaire, confort, constantes sourcées, météo PVGIS |
 
 Comment tout cela s'enchaîne, en schémas, est dans [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 Ce qui n'est pas encore fait, et par quel moyen le faire, est dans [docs/FEUILLE_DE_ROUTE.md](docs/FEUILLE_DE_ROUTE.md).
-| `services`, `config`, `io/pvgis_historical` | Physique solaire, confort, constantes sourcées, météo PVGIS |
 
 `verification/` rejoue à travers cette chaîne des cas dont le résultat est connu par ailleurs :
 
@@ -202,6 +204,17 @@ rayflect etude mon_etude.toml
 
 Les versions exactes du poste d'essai sont dans `verrouillage.txt`. La mise en place d'un poste de
 développement est dans [CONTRIBUER.md](CONTRIBUER.md).
+
+## Participer
+
+- **Une question, une idée, une étude à partager** : les [Discussions](https://github.com/kelveen-hq/rayflect/discussions).
+- **Une erreur dans un résultat, un plantage** : un [ticket](https://github.com/kelveen-hq/rayflect/issues/new/choose),
+  avec le fichier d'étude qui la reproduit.
+- **Une contribution** : lire [CONTRIBUER.md](CONTRIBUER.md), puis proposer une demande de fusion.
+- **Citer Rayflect** dans un rapport ou un article : [CITATION.cff](CITATION.cff).
+- Chacun suit les [règles de conduite](CODE_OF_CONDUCT.md).
+
+Ce dont il a le plus besoin : des architectes et des bureaux d'études qui l'éprouvent sur de vrais projets.
 
 ## Qui le porte
 
